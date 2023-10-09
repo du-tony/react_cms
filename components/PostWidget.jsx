@@ -9,6 +9,8 @@ import { getSimilarPosts, getRecentPosts } from '../services';
 const PostWidget = ({ categories, slug }) => {
   const [relatedPosts, setRelatedPosts] = useState([]);
 
+  // if slug, i.e., entering a blog, show similar blog based on categories
+  // otherwise it's in homw page, just show recent post.
   useEffect(() => {
     if (slug) {
       getSimilarPosts(categories, slug).then((result) => {

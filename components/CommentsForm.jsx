@@ -32,6 +32,7 @@ const CommentsForm = ({ slug }) => {
     }
   };
 
+  // handle local storage + post to graphCMS
   const handlePostSubmission = () => {
     setError(false);
     const { name, email, comment, storeData } = formData;
