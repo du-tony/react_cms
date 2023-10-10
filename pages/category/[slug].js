@@ -4,13 +4,19 @@ import { useRouter } from 'next/router';
 import { getCategories, getCategoryPost } from '../../services';
 import { PostCard, Categories, Loader } from '../../components';
 
-const CategoryPost = ({ posts }) => {
+import NotFound from './NotFound';
+
+const CategoryPost = ({ posts, notFound }) => {
   const router = useRouter();
 
   if (router.isFallback) {
     return <Loader />;
   }
-
+  if (notFound && notFound === true) {
+    return (
+      <NotFound />
+    );
+  }
   return (
     <div className="container mx-auto px-10 mb-8">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -33,7 +39,14 @@ export default CategoryPost;
 // Fetch data at build time
 export async function getStaticProps({ params }) {
   const posts = await getCategoryPost(params.slug);
-
+  if (posts.length === 0) {
+    return {
+      props: {
+        notFound: true,
+        posts: {},
+      },
+    };
+  }
   return {
     props: { posts },
   };

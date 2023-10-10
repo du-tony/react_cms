@@ -4,12 +4,16 @@ import { useRouter } from 'next/router';
 import { PostDetail, Categories, PostWidget, Author, Comments, CommentsForm, Loader } from '../../components';
 import { getPosts, getPostDetails } from '../../services';
 import { AdjacentPosts } from '../../sections';
+import NotFound from './NotFound';
 
-const PostDetails = ({ post }) => {
+const PostDetails = ({ post, notFound }) => {
   const router = useRouter();
-
   if (router.isFallback) {
     return <Loader />;
+  }
+
+  if (notFound === true) {
+    return <NotFound />;
   }
 
   return (
@@ -39,9 +43,17 @@ export default PostDetails;
 // Fetch data at build time
 export async function getStaticProps({ params }) {
   const data = await getPostDetails(params.slug);
+  if (data?.title) {
+    return {
+      props: {
+        post: data,
+        notFound: false,
+      },
+    };
+  }
   return {
     props: {
-      post: data,
+      notFound: true,
     },
   };
 }
